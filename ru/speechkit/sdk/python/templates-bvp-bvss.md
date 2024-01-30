@@ -66,21 +66,21 @@
          text = f'Следующая станция - {var_desc}.'
 
          # Подготовьте модель для синтеза речи.
-         synthesis_model = model_repository.synthesis_model()
+         synthesis_model = model_repository.YandexSynthesizer()
          synthesis_model.model = 'general'
          synthesis_model.voice = 'alena'
 
          original_audio = synthesis_model.synthesize(text.replace(var_desc, var_original), raw_format=True)
 
          # Подготовьте модель для распознавания речи, чтобы определить начало и конец фразы.
-         recognition_model = model_repository.recognition_model()
+         recognition_model = model_repository.YandexRecognizer()
          recognition_model.model = 'general'
          recognition_model.language = 'ru-RU'
          recognition_model.audio_processing_type = AudioProcessingType.Full
 
          original_recognition = recognition_model.transcribe(original_audio)[0]
          assert original_recognition.raw_text == 'следующая станция садовая'
-         variable_markup = original_recognition.words[-1]
+         variable_markup = original_recognition.utterances[0]
 
          # Сформируйте текстовый шаблон.
          text_template = TextTemplate(
